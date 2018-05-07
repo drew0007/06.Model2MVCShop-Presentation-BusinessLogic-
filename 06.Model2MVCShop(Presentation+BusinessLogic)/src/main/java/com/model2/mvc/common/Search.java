@@ -9,6 +9,7 @@ public class Search {
 	private String searchCondition;
 	private String searchKeyword;
 	private int pageSize;
+	private String sort;				// 정렬 ( default : 기본 / asc : 오름차순 / dsc : 내림차순 )
 	//==> 리스트화면 currentPage에 해당하는 회원정보를 ROWNUM 사용 SELECT 위해 추가된 Field 
 	//==> UserMapper.xml 의 
 	//==> <select  id="getUserList"  parameterType="search"	resultMap="userSelectMap">
@@ -47,6 +48,14 @@ public class Search {
 	}
 	public void setSearchKeyword(String searchKeyword) {
 		this.searchKeyword = searchKeyword;
+	}
+
+	public String getSort() {
+		return sort;
+	}
+
+	public void setSort(String sort) {
+		this.sort = sort;
 	}
 	
 	//==> Select Query 시 ROWNUM 마지막 값 

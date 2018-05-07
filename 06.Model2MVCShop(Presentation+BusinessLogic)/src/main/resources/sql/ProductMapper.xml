@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ProductMapper">
+	<resultMap id="productSelectMap" type="product">
+		<result property="prodNo" column="prod_no" jdbcType="INTEGER"/>
+		<result property="prodName" column="prod_name" jdbcType="VARCHAR"/>
+		<result property="prodDetail" column="prod_detail" jdbcType="VARCHAR"/>
+		<result property="manuDate" column="manufacture_day" jdbcType="VARCHAR"/>
+		<result property="price" column="price" jdbcType="INTEGER"/>
+		<result property="fileName" column="image_file" jdbcType="VARCHAR"/>
+		<result property="regDate" column="reg_date" jdbcType="DATE"/>
+		<result property="prodTranCode" column="tran_code" jdbcType="VARCHAR"/>
+		<result property="prodCnt" column="prod_cnt" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<insert id="addProduct" parameterType="product">
+		INSERT 
+		INTO product(prod_no, prod_name, prod_detail, manufacture_day, price, image_file, reg_date, prod_cnt)
+		VALUES (seq_product_prod_no.NEXTVAL,
+				#{prodName}, 
+				#{prodDetail:VARCHAR}, 
+				#{manuDate:VARCHAR}, 
+				#{price:INTEGER}, 
+				#{fileName:VARCHAR}, 
+				SYSDATE, 
+				#{prodCnt:INTEGER})
+	</insert>
+	
+	<select id="getProduct" parameterType="int" resultMap="productSelectMap">
+		SELECT 
+		p.prod_no, p.prod_name, p.prod_detail, p.manufacture_day, p.price, p.image_file, p.reg_date, p.prod_cnt 
+		FROM product p 
+		WHERE p.prod_no = #{value}
+	</select>
+	
+	<update id="updateProduct" parameterType="product">
+		UPDATE product
+		<set>
+			<if test="prodName != null">prod_name = #{prodName:VARCHAR},</if>
+										prod_detail = #{prodDetail:VARCHAR},
+										manufacture_day = #{manuDate:VARCHAR},
+										price = #{price:INTEGER},
+										image_file = #{fileName:VARCHAR},
+										prod_cnt = #{prodCnt:INTEGER}
+		</set>
+		WHERE prod_no = #{prodNo}
+	</update>
+	
+	
+	<sql id="select-product-list">
+		SELECT DISTINCT p.prod_no, p.prod_name, p.prod_detail, p.manufacture_day, p.price, p.image_file, p.reg_date, p.prod_cnt
+		  FROM product p, (SELECT * FROM transaction WHERE tran_status_code <![CDATA[ <> ]]> '5') t
+			<where>
+				p.prod_no = t.prod_no(+)
+				<choose>
+					<when test="searchCondition == 0">
+						<if test="searchKeyword != null">
+							AND p.prod_no LIKE '%'||#{searchKeyword}||'%'
+						</if>
+					</when>
+					<when test="searchCondition == 1">
+						<if test="searchKeyword != null">
+							AND p.prod_name LIKE '%'||#{searchKeyword}||'%'
+						</if>
+					</when>
+					<when test="searchCondition == 2">
+						<if test="searchKeyword != null">
+							AND p.price LIKE '%'||#{searchKeyword}||'%'
+						</if>
+					</when>
+				</choose>
+			</where>
+			ORDER BY 
+			<if test="sort != null">
+				<choose>
+					<when test="sort == 'asc'">
+						p.price,
+					</when>
+					<when test="sort == 'dsc'">
+						p.price DESC,
+					</when>
+				</choose>
+			</if>
+			p.prod_no
+	</sql>
+	
+	
+	
+	<sql id="select-count-start">
+		SELECT COUNT(*) FROM (
+	</sql>
+	
+	<sql id="select-count-end">
+		)
+	</sql>
+	
+	
+	
+	<sql id="select-rownum-start">
+		SELECT * FROM (	SELECT inner_table. * ,  ROWNUM AS row_seq FROM (
+	</sql>
+	
+	<sql id="select-rownum-end">
+		 ) inner_table WHERE ROWNUM <![CDATA[ < ]]>= #{currentPage}*#{pageSize} ) WHERE row_seq BETWEEN (#{currentPage}-1)*#{pageSize}+1 AND #{currentPage}*#{pageSize}
+	</sql>
+	
+	<select id="getProductList" parameterType="search" resultMap="productSelectMap">
+		<include refid="select-rownum-start"/>
+		<include refid="select-product-list"/>
+		<include refid="select-rownum-end"/>
+	</select>
+	
+	<select id="getProductListCount" parameterType="search" resultType="int">
+		<include refid="select-count-start"/>
+		<include refid="select-product-list"/>
+		<include refid="select-count-end"/>
+	</select>
+</mapper>

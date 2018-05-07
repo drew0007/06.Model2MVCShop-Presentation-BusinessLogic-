@@ -63,6 +63,11 @@ function history(){
 					</td>
 				</tr>
 				<tr>
+					<td class="Depth03">
+						<a href="/historyPurchase.do?prodNo=0" target="rightFrame">판매이력조회</a>
+					</td>
+				</tr>
+				<tr>
 					<td class="DepthEnd">&nbsp;</td>
 				</tr>
 			</table>
@@ -86,6 +91,12 @@ function history(){
 					<a href="/listPurchase.do"  target="rightFrame">구매이력조회</a>
 				</td>
 			</tr>
+			
+			<tr>
+				<td class="Depth03">
+					<a href="/listCart.do" target="rightFrame">장바구니</a>
+				</td>
+			</tr>	
 			</c:if>
 			
 			<tr>
