@@ -110,7 +110,9 @@ public class PurchaseDaoImpl implements PurchaseDAO{
 	public void updateTranCode(Purchase purchase) throws Exception {
 		// TODO Auto-generated method stub
 		sqlSession.update("PurchaseMapper.updateTranCode", purchase);
-		sqlSession.update("PurchaseMapper.updateTranCode2", purchase);
+		if(purchase.getTranCode().equals("5")) {
+			sqlSession.update("PurchaseMapper.updateTranCode2", purchase);
+		}
 	}
 	
 

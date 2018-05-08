@@ -16,8 +16,8 @@ function fncUpdatePurchase(){
 	var listSize = ${list.size()}
 	
 	for(i=1; i<=listSize; i++){
-		if(document.getElementById("tranCode"+i).value == '2' || document.getElementById("tranCode"+i).value == '3'){
-			alert("배송 진행중인 상품이 있어서 수정할 수 없습니다.");
+		if(document.getElementById("tranCode"+i).value != '1'){
+			alert("구매완료 상태의 상품만 수정할 수 있습니다.");
 			return;
 		}
 	}

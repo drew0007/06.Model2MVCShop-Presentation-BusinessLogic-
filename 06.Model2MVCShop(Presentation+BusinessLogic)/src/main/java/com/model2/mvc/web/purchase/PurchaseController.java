@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.portlet.ModelAndView;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
@@ -111,7 +111,7 @@ public class PurchaseController {
 			purchase2.setTranCode("1");
 			purchase2.setTranCnt(Integer.parseInt(tranCnt[i]));
 			
-			list.add(purchase);
+			list.add(purchase2);
 		}
 		
 		int tranNo = purchaseService.addPurchase(list);
@@ -133,7 +133,7 @@ public class PurchaseController {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("list", map.get("list"));
 		modelAndView.setViewName("/purchase/getPurchase.jsp");
-		
+
 		return modelAndView;
 	}
 	
