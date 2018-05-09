@@ -28,7 +28,16 @@ function fncAddCart(prodNo){
 
 function fncAddPurchase(){
 	var tranCnt = document.getElementById("tranCnt").value;
-	
+	var prodCnt = document.getElementById("prodCnt").value;
+
+	if(tranCnt == null || tranCnt.length<1){
+		alert("수량은 반드시 입력하셔야 합니다.");
+		return;
+	}
+	if(parseInt(tranCnt) > parseInt(prodCnt)){
+		alert("재고 수량을 초과할 수 없습니다.");
+		return;
+	}
 	location.href="/addPurchaseView.do?prodNo="+${product.prodNo}+"&tranCnt="+tranCnt;
 }
 </script>
